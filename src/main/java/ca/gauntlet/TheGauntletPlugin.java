@@ -32,6 +32,7 @@ package ca.gauntlet;
 
 import ca.gauntlet.entity.Resource;
 import ca.gauntlet.entity.Resource.ResourceType;
+import ca.gauntlet.entity.Tornado;
 import ca.gauntlet.overlay.SceneOverlay;
 import ca.gauntlet.overlay.TimerOverlay;
 import ca.gauntlet.resource.ResourceManager;
@@ -55,15 +56,7 @@ import net.runelite.api.NpcID;
 import net.runelite.api.NullNpcID;
 import net.runelite.api.ObjectID;
 import net.runelite.api.Player;
-import net.runelite.api.events.ActorDeath;
-import net.runelite.api.events.ChatMessage;
-import net.runelite.api.events.GameObjectDespawned;
-import net.runelite.api.events.GameObjectSpawned;
-import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.NpcDespawned;
-import net.runelite.api.events.NpcSpawned;
-import net.runelite.api.events.VarbitChanged;
-import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.events.*;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -109,7 +102,7 @@ public class TheGauntletPlugin extends Plugin
 	@Getter
 	private final Set<GameObject> utilities = new HashSet<>();
 	@Getter
-	private final Set<NPC> tornadoes = new HashSet<>();
+	private final Set<Tornado> tornadoes = new HashSet<>();
 
 	private final List<Set<?>> entitySets = Arrays.asList(resources, utilities, tornadoes);
 
@@ -355,6 +348,18 @@ public class TheGauntletPlugin extends Plugin
 	}
 
 	@Subscribe
+	private void onGameTick(final GameTick event)
+	{
+		if (!tornadoes.isEmpty())
+		{
+			for (Tornado tornado : tornadoes)
+			{
+				tornado.updateTimeUntilDespawn();
+			}
+		}
+	}
+
+	@Subscribe
 	private void onChatMessage(final ChatMessage event)
 	{
 		if (!inGauntlet || inHunllef)
@@ -477,7 +482,7 @@ public class TheGauntletPlugin extends Plugin
 
 		if (TORNADO_IDS.contains(npc.getId()))
 		{
-			tornadoes.add(npc);
+			tornadoes.add(new Tornado(npc));
 		}
 	}
 

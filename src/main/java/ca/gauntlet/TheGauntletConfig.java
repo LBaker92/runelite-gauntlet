@@ -44,7 +44,7 @@ import net.runelite.client.config.Units;
 @ConfigGroup("thegauntlet")
 public interface TheGauntletConfig extends Config
 {
-	// Sections
+	//region Sections
 
 	@ConfigSection(
 		name = "Resource Tracking",
@@ -101,8 +101,9 @@ public interface TheGauntletConfig extends Config
 		closedByDefault = true
 	)
 	String otherSection = "other";
+	//endregion
 
-	// Resource Tracking
+	//region Resource Tracking
 
 	@ConfigItem(
 		name = "Track resources",
@@ -235,8 +236,9 @@ public interface TheGauntletConfig extends Config
 	{
 		return false;
 	}
+	//endregion
 
-	// Resource Overlay Section
+	//region Resource Overlay Section
 
 	@ConfigItem(
 		name = "Overlay resources",
@@ -490,8 +492,9 @@ public interface TheGauntletConfig extends Config
 	{
 		return 1;
 	}
+	//endregion
 
-	// Utilities Section
+	//region Utilities Section
 
 	@ConfigItem(
 		name = "Outline starting room utilities",
@@ -646,9 +649,9 @@ public interface TheGauntletConfig extends Config
 	{
 		return new Color(255, 255, 0, 50);
 	}
+	//endregion
 
-	// Npcs Section
-
+	//region NPCs Section
 	@ConfigItem(
 		name = "Outline demi-bosses",
 		description = "Overlay demi-bosses with a colored outline.",
@@ -761,8 +764,9 @@ public interface TheGauntletConfig extends Config
 	{
 		return Color.ORANGE;
 	}
+	//endregion
 
-	// Timer Section
+	//region Timer Section
 
 	@ConfigItem(
 		position = 0,
@@ -788,7 +792,20 @@ public interface TheGauntletConfig extends Config
 		return false;
 	}
 
-	// Other Section
+	@ConfigItem(
+			position = 2,
+			keyName = "timerTornado",
+			name = "Tornado Timer",
+			description = "Display an overlay that tracks the time until a tornado will despawn.",
+			section = "timer"
+	)
+	default boolean timerTornado()
+	{
+		return false;
+	}
+	//endregion
+
+	//region Other Section
 
 	@ConfigItem(
 		name = "Render distance",
@@ -801,8 +818,9 @@ public interface TheGauntletConfig extends Config
 	{
 		return RenderDistance.FAR;
 	}
+	//endregion
 
-	// Constants
+	//region Constants
 
 	@Getter
 	@AllArgsConstructor
@@ -822,4 +840,5 @@ public interface TheGauntletConfig extends Config
 			return name;
 		}
 	}
+	//endregion
 }

@@ -39,12 +39,9 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import net.runelite.api.Client;
-import net.runelite.api.GameObject;
-import net.runelite.api.NPC;
-import net.runelite.api.ObjectID;
-import net.runelite.api.Perspective;
-import net.runelite.api.Player;
+
+import ca.gauntlet.entity.Tornado;
+import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -111,9 +108,10 @@ public class SceneOverlay extends Overlay
 			return;
 		}
 
-		for (final NPC tornado : plugin.getTornadoes())
+		for (final Tornado tornado : plugin.getTornadoes())
 		{
-			final Polygon polygon = Perspective.getCanvasTilePoly(client, tornado.getLocalLocation());
+			NPC npc = tornado.getNpc();
+			final Polygon polygon = Perspective.getCanvasTilePoly(client, npc.getLocalLocation());
 
 			if (polygon == null)
 			{
@@ -122,6 +120,21 @@ public class SceneOverlay extends Overlay
 
 			drawOutlineAndFill(graphics2D, config.tornadoOutlineColor(), config.tornadoFillColor(),
 				config.tornadoTileOutlineWidth(), polygon);
+
+			if (!config.timerTornado() || tornado.getTimeUntilDespawn() < 0)
+			{
+				continue;
+			}
+
+			final String timeLeftAsString = String.valueOf(tornado.getTimeUntilDespawn());
+			final Point timerPos = npc.getCanvasTextLocation(graphics2D, timeLeftAsString, 0);
+
+			if (timerPos == null)
+			{
+				continue;
+			}
+
+			OverlayUtil.renderTextLocation(graphics2D, timerPos, timeLeftAsString, config.tornadoOutlineColor());
 		}
 	}
 
